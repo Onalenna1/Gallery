@@ -1,4 +1,2 @@
-const express=require('express'), bcrypt=require('bcryptjs'), jwt=require('jsonwebtoken'), User=require('../models/User'), router=express.Router();
-router.post('/register', async(req,res)=>{try{const h=await bcrypt.hash(req.body.password,10); const u=await User.create({name:req.body.name,email:req.body.email,password:h}); const t=jwt.sign({id:u._id},process.env.JWT_SECRET,{expiresIn:'7d'}); res.json({token:t,user:{id:u._id,name:u.name,email:u.email}});}catch{res.status(400).json({msg:"User exists"});}});
-router.post('/login', async(req,res)=>{const u=await User.findOne({email:req.body.email}); if(!u) return res.status(400).json({msg:"Not found"}); if(!await bcrypt.compare(req.body.password,u.password)) return res.status(400).json({msg:"Wrong password"}); const t=jwt.sign({id:u._id},process.env.JWT_SECRET,{expiresIn:'7d'}); res.json({token:t,user:{id:u._id,name:u.name,email:u.email}});});
-module.exports=router;
+const jwt=require('jsonwebtoken');
+module.exports=(req,res,next)=>{const t=req.header('Authorization')?.replace('Bearer ',''); if(!t) return res.status(401).json({msg:"No token"}); try{req.userId=jwt.verify(t,process.env.JWT_SECRET).id; next();}catch{res.status(401).json({msg:"Invalid token"});}};
