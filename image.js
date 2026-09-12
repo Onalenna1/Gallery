@@ -1,0 +1,2 @@
+const mongoose = require('mongoose');
+module.exports = mongoose.model('Image', new mongoose.Schema({ title: String, category: String, url: String, public_id: String, userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, favorite: { type: Boolean, default: false } }, { timestamps: true }));
