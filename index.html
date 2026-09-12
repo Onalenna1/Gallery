@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Image Gallery </title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <div class="topbar">
+      <span id="userName">My Gallery</span>
+      <button id="logoutBtn">Logout</button>
+    </div>
+    <h1>My Image Gallery</h1>
+    <p>Cloud storage with MongoDB + Cloudinary</p>
+  </header>
+
+  <section class="controls">
+    <div class="left-group">
+      <label for="imageUpload" class="upload-btn">+ Upload Image</label>
+      <input type="file" id="imageUpload" accept="image/jpeg, image/png, image/webp" hidden />
+      
+      <select id="categorySelect">
+        <option value="Nature">Nature</option>
+        <option value="Travel">Travel</option>
+        <option value="People">People</option>
+        <option value="Architecture">Architecture</option>
+      </select>
+    </div>
+
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search by title..." />
+    </div>
+
+    <div class="filter-box">
+      <button class="filter-btn active" data-category="All">All</button>
+      <button class="filter-btn" data-category="Nature">Nature</button>
+      <button class="filter-btn" data-category="Travel">Travel</button>
+      <button class="filter-btn" data-category="People">People</button>
+      <button class="filter-btn" data-category="Architecture">Architecture</button>
+      <button class="filter-btn" data-category="Favorites">Favorites</button>
+    </div>
+  </section>
+
+  <div id="dropZone">Drop image here to upload</div>
+
+  <p id="loader" style="text-align:center;color:#777;display:none;">Loading...</p>
+  <p id="noResults" style="text-align:center;color:#777;display:none;">No images found</p>
+
+  <div id="gallery" class="gallery"></div>
+
+  <div id="lightbox" class="lightbox">
+    <span class="close-lightbox">&times;</span>
+    <img id="lightboxImg" src="" alt="" />
+    <h3 id="lightboxTitle"></h3>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
