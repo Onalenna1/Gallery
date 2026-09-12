@@ -1,0 +1,8 @@
+const express=require('express'), multer=require('multer'), {CloudinaryStorage}=require('multer-storage-cloudinary'), cloudinary=require('cloudinary').v2, auth=require('../middleware/auth'), Image=require('../models/image'), router=express.Router();
+cloudinary.config({cloud_name:process.env.CLOUDINARY_CLOUD_NAME,api_key:process.env.CLOUDINARY_API_KEY,api_secret:process.env.CLOUDINARY_API_SECRET});
+const storage=new CloudinaryStorage({cloudinary,params:{folder:'gallery13',allowed_formats:['jpg','png','webp','jpeg']}}); const upload=multer({storage});
+router.get('/',auth,async(req,res)=>{const{search,category}=req.query; let q={userId:req.userId}; if(category&&category!=='All'&&category!=='Favorites') q.category=category; if(category==='Favorites') q.favorite=true; if(search) q.title={$regex:search,$options:'i'}; res.json(await Image.find(q).sort({createdAt:-1}));});
+router.post('/upload',auth,upload.single('image'),async(req,res)=>{const i=await Image.create({title:req.body.title||req.file.originalname,category:req.body.category||'Nature',url:req.file.path,public_id:req.file.filename,userId:req.userId}); res.json(i);});
+router.patch('/:id/favorite',auth,async(req,res)=>{const i=await Image.findOne({_id:req.params.id,userId:req.userId}); i.favorite=!i.favorite; await i.save(); res.json(i);});
+router.delete('/:id',auth,async(req,res)=>{const i=await Image.findOneAndDelete({_id:req.params.id,userId:req.userId}); if(i?.public_id) await cloudinary.uploader.destroy(i.public_id); res.json({msg:"Deleted"});});
+module.exports=router;
